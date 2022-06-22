@@ -1,0 +1,53 @@
+ORDEM DE SERVIÇO - MODEL
+
+class - ordem de serviço
+carro
+placa
+km
+data_inicial
+data_final
+cliente (chave)
+observações
+
+class - item peça
+ordem de serivço (forekeing)
+produto
+produto_id
+preco
+quantidade
+
+class - item servico
+ordem de serivço (forekeing)
+serviço
+servico_id
+preco
+
+CLIENTE (perfil) - MODEL
+usuario
+idade (automatico)
+data de nascimento
+cpf (único)
+endereco
+numero
+complemento
+bairro
+cep
+cidade
+estado
+
+PRODUTO - MODEL
+nome
+preco
+descricao
+descrição_detalhada
+imagem
+estoque
+slug
+
+SERVICO - MODEL
+nome
+preco
+descricao
+
+
+
