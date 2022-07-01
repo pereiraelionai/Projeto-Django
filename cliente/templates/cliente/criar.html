@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block conteudo %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Criar cliente</h1>
+</div>
+
+<div class="form-group">
+
+    <form method="post">
+        {% csrf_token %}
+        {{ clienteform|crispy }}
+
+        <div class="row">
+            <div class="col">
+                <button type="submit" class="btn btn-primary mt-3">
+                    Enviar
+                </button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

@@ -12,6 +12,7 @@ class OrdemServico(models.Model):
     data_termino = models.DateTimeField(
         default=timezone.now, verbose_name='Data Término')
     observacoes = models.TextField()
+    os_concluida = models.BooleanField(default=False)
 
     def __str__(self):
         return f'OS Nº {self.pk}'

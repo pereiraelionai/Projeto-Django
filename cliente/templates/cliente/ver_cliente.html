@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+{% for cliente in clientes %}
+
+<h1 class="mt-5">{{ cliente.nome }} {{ cliente.sobrenome }}</h1>
+
+<dl>
+    <dt>ID</dt>
+    <dd>{{ cliente.id }}</dd>
+
+    <dt>Telefone</dt>
+    <dd>{{ cliente.telefone }}</dd>
+
+    <dt>E-mail</dt>
+    <dd>{{ cliente.email }}</dd>
+
+    <dt>Idade</dt>
+    <dd>{{ cliente.idade }}</dd>
+
+    <dt>Data de Nascimento</dt>
+    <dd>{{ cliente.data_nascimento }}</dd>
+
+    <dt>Endereço</dt>
+    <dd>{{ cliente.endereco }}</dd>
+
+    <dt>Número</dt>
+    <dd>{{ cliente.numero }}</dd>
+
+    <dt>Bairro</dt>
+    <dd>{{ cliente.bairro }}</dd>
+
+    <dt>Complemento</dt>
+    <dd>
+        {{ cliente.complemento }}
+    </dd>
+    <dt>CEP</dt>
+    <dd>{{ cliente.CEP }}</dd>
+
+    <dt>Cidade / Estado</dt>
+    <dd>
+        {{ cliente.cidade }} / {{cliente.estado}}
+    </dd>
+    <dt>Cliente cadastrado em:</dt>
+    <dd>
+        {{ cliente.data_criacao }}
+    </dd>
+</dl>
+{% endfor %}
+
+<div>
+    <a href="#" class="btn btn-outline-warning">Editar Cliente</a>
+</div>
+
+{% endblock %}

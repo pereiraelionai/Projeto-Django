@@ -14,7 +14,7 @@ class ItemServicoInline(admin.TabularInline):
 
 class OrdemServicoAdmin(admin.ModelAdmin):
     list_display = [
-        'cliente', 'marca_veiculo', 'modelo_veiculo', 'placa_veiculo', 'data_inicial', 'data_termino'
+        'cliente', 'marca_veiculo', 'modelo_veiculo', 'placa_veiculo', 'data_inicial', 'data_termino', 'os_concluida'
     ]
     inlines = [
         ItemPecaInline, ItemServicoInline
@@ -24,3 +24,5 @@ class OrdemServicoAdmin(admin.ModelAdmin):
 admin.site.register(ItemPeca)
 admin.site.register(ItemServico)
 admin.site.register(OrdemServico, OrdemServicoAdmin)
+
+# TODO: Corrir o plural de ordem de serviço no admin
