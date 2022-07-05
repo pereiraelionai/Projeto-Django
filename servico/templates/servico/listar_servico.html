@@ -18,19 +18,31 @@
                 <th scope="col">Nome</th>
                 <th scope="col">Preço</th>
                 <th scope="col">Descrição</th>
+                <th scope="col">Editar</th>
             </tr>
         </thead>
         {% for servico in servicos %}
         <tbody>
             <tr>
-                <td><a href="">{{ servico.pk }}</a></td>
-                <td><a href="">{{ servico.nome_servico }}</a></td>
+                <td>{{ servico.pk }}</td>
+                <td>{{ servico.nome_servico }}</td>
                 <td>{{ servico.preco_servico|formata_preco }}</td>
                 <td>{{ servico.descricao_servico }}</td>
+                <td>
+                    <a href="#">
+                        <i class="fa fa-book" aria-hidden="true"></i>
+                    </a>
+                </td>
             </tr>
         </tbody>
         {% endfor %}
     </table>
+</div>
+
+<div class="row mt-3">
+    <div class="col">
+        {% include 'parciais/_pagination.html' %}
+    </div>
 </div>
 
 {% endblock %}

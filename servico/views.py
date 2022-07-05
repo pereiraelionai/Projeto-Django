@@ -45,3 +45,4 @@ class ListarServico(ListView):
     model = Servico
     template_name = 'servico/listar_servico.html'
     context_object_name = 'servicos'
+    paginate_by = 10

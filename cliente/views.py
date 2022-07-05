@@ -59,6 +59,7 @@ class ListarCliente(ListView):
     model = Cliente
     template_name = 'cliente/listar.html'
     context_object_name = 'clientes'
+    paginate_by = 10
 
 
 def ver_cliente(request, cliente_id):

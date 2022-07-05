@@ -1,5 +1,6 @@
 import imp
 from this import s
+from urllib import request
 from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic.list import ListView
@@ -33,12 +34,20 @@ class CriarProduto(View):
                 self.request, 'Existem erros no formulário, por favor revise e tente novamente'
             )
             return self.renderizar
-
+        '''
         produto_db = Produto(**self.produtoform.cleaned_data)
         # TODO: Inserir mensagens de sucesso ao salvar o produto
         produto_db.save()
+        '''
+        if self.request.method == 'POST':
+            form = forms.ProdutoForm(self.request.POST, self.request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect('produto:listar')
+            else:
+                form = forms.ProdutoForm()
 
-        return redirect('produto:listar')
+        return self.renderizar
 
     def get(self, *args, **kwars):
         return self.renderizar
@@ -48,3 +57,4 @@ class ListarProduto(ListView):
     model = Produto
     template_name = 'produto/listar_produtos.html'
     context_object_name = 'produtos'
+    paginate_by = 10

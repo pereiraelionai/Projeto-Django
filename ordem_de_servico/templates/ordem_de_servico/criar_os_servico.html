@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load funcoes_uteis %}
+
+{% block conteudo %}
+
+{% include 'parciais/_messages.html' %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
+    <h2 class="h2">Adicione os produtos necessários</h2>
+</div>
+
+<div class="table-responsive mt-3">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Preço</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Adicionar</th>
+            </tr>
+        </thead>
+        {% for produto in os_produtos %}
+        <tbody>
+            <tr>
+                <td>{{ produto.pk }}</td>
+                <td>{{ produto.nome_produto }}</td>
+                <td>{{ produto.preco_produto|formata_preco }}</td>
+                <td>{{ produto.descricao_produto }}</td>
+                <form action="{% url 'os:add_os' %}">
+                    <td>
+                        <button type="submit" class="btn btn-primary" value="{{ produto.pk }}" name="id_produto">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                            Adicionar
+                        </button>
+                    </td>
+                </form>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="row mt-3">
+    <div class="col">
+        {% include 'parciais/_pagination.html' %}
+    </div>
+</div>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
+    <h2 class="h2">Adicione os serviços necessários</h2>
+</div>
+
+<div class="table-responsive mt-3">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Preço</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Adicionar</th>
+            </tr>
+        </thead>
+        {% for servico in os_servicos %}
+        <tbody>
+            <tr>
+                <td>{{ servico.pk }}</td>
+                <td>{{ servico.nome_servico }}</td>
+                <td>{{ servico.preco_servico|formata_preco }}</td>
+                <td>{{ servico.descricao_servico }}</td>
+                <form action="{% url 'os:add_os' %}">
+                    <td>
+                        <button type="submit" class="btn btn-primary" value="{{ servico.pk }}" name="id_servico">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                            Adicionar
+                        </button>
+                    </td>
+                </form>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
+    <h2 class="h2">Comentários adicionais</h2>
+</div>
+
+<form action="{% url 'os:add_os' %}">
+    <div class="form-group">
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="comentarios"></textarea>
+    </div>
+    <button type="submit" class="btn btn-success btn-lg btn-block mb-3">
+        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+        Confirmar
+    </button>
+</form>
+
+{% endblock %}
