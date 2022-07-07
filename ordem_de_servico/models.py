@@ -3,9 +3,9 @@ from django.utils import timezone
 
 
 class OrdemServico(models.Model):
+    id_cliente = models.CharField(max_length=50, default='')
     cliente = models.CharField(max_length=50)
-    marca_veiculo = models.CharField(max_length=50)
-    modelo_veiculo = models.CharField(max_length=100)
+    veiculo = models.CharField(max_length=50)
     placa_veiculo = models.CharField(max_length=8)
     km = models.PositiveIntegerField()
     data_inicial = models.DateField(auto_now=True, verbose_name='Data')

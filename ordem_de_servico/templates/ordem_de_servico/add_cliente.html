@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3">
+    <h2 class="h2">Selecione o cliente</h2>
+</div>
+
+<div class="table-responsive mt-3">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Sobrenome</th>
+                <th scope="col">CPF</th>
+                <th scope="col">Telefone</th>
+                <th scope="col">Email</th>
+                <th scope="col">Cidade</th>
+                <th scope="col">Selecionar</th>
+            </tr>
+        </thead>
+        {% for cliente in clientes %}
+        <tbody>
+            <tr>
+                <td>{{ cliente.pk }}</a></td>
+                <td>{{ cliente.nome }}</a></td>
+                <td>{{ cliente.sobrenome }}</td>
+                <td>{{ cliente.cpf }}</td>
+                <td>{{ cliente.telefone }}</td>
+                <td>{{ cliente.email }}</td>
+                <td>{{ cliente.cidade }}-{{ cliente.estado }}</td>
+                <form action="{% url 'os:add_cliente' %}">
+                    <td>
+                        <button type="submit" class="btn btn-success" value="{{ cliente.pk }}" name="id_cliente">
+                            Selecionar
+                        </button>
+                    </td>
+                </form>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="row mt-3">
+    <div class="col">
+        {% include 'parciais/_pagination.html' %}
+    </div>
+</div>
+
+{% endblock %}

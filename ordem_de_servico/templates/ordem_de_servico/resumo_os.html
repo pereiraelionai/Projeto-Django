@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+
+<div class="row mb-5 mt-3">
+    <div class="col-lg">
+        <h2>Ordem de Serviço</h2>
+        <br>
+        <p class="lead">Dados do cliente:</p>
+        <dl class="row">
+            {% for chave, valor in cliente.items %}
+            {% if 'nome_cliente' in chave %}
+            <dt class="col-lg-2">Nome:</dt>
+            <dd class="col-lg-4">{{valor}}</dd>
+            {% endif %}
+            {% if 'last' in chave %}
+            <dt class="col-lg-2">Sobrenome:</dt>
+            <dd class="col-lg-4">{{ valor }}</dd>
+            {%endif%}
+
+            {% if 'cpf' in chave %}
+            <dt class="col-lg-2">CPF:</dt>
+            <dd class="col-lg-4">{{ valor }}</dd>
+            {%endif%}
+            {% if 'telefone' in chave %}
+            <dt class="col-lg-2">Telefone:</dt>
+            <dd class="col-lg-4">{{ valor }}</dd>
+            {%endif%}
+            {% if 'email' in chave %}
+            <dt class="col-lg-2">E-mail:</dt>
+            <dd class="col-lg-4">{{ valor }}</dd>
+            {%endif%}
+            {% endfor %}
+        </dl>
+    </div>
+</div>
+<div class="row mb-5">
+    <div class="col-lg">
+        <p class="lead">Dados do veículo:</p>
+        <dl class="row">
+            {%for chave, valor in carrinho_comentario.items%}
+            {%if 'veiculo' in chave%}
+            <dt class="col-lg-2">Veículo:</dt>
+            <dd class="col-lg-3">{{valor}}</dd>
+            {%endif%}
+            {% if 'placa' in chave%}
+            <dt class="col-lg-2">Placa:</dt>
+            <dd class="col-lg-2">{{ valor }}</dd>
+            {%endif%}
+            {%if 'km' in chave%}
+            <dt class="col-lg-1">Km:</dt>
+            <dd class="col-lg-1">{{ valor}}</dd>
+            {% endif %}
+            {% if 'entrada' in chave %}
+            <dt class="col-lg-2">Data entrada:</dt>
+            <dd class="col-lg-3">{{ valor }}</dd>
+            {%endif%}
+            {%if 'data' in chave%}
+            <dt class="col-lg-2">Data término:</dt>
+            <dd class="col-lg-4">{{ valor }}</dd>
+            {%endif%}
+            {%if 'comentarios' in chave%}
+            <dt class="col-lg-2">Observação:</dt>
+            <dd class="col-lg-4">{{ valor }}</dd>
+            {%endif%}
+            {% endfor %}
+        </dl>
+    </div>
+</div>
+
+<h2>Produtos</h2>
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>Produto</th>
+            <th>Valor</th>
+            <th>QTD.</th>
+            <th>Total</th>
+        </tr>
+        {% for linha in carrinho_produto.values %}
+        <tr>
+            <td>
+                <a href="">
+                    {{linha.nome_produto}}
+                </a>
+                <a class="ml-3" href="{% url 'os:remover' %}?id_produto={{linha.produto_id}}">
+                    <i class="fas fa-times-circle text-danger" aria-hidden="true"></i>
+                </a>
+            </td>
+            <td>{{linha.preco_produto}}</td>
+            <td>{{linha.quantidade}}</td>
+            <td></td>
+        </tr>
+        {%endfor%}
+    </table>
+</div>
+
+<h2>Serviços</h2>
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>Produto</th>
+            <th>Valor</th>
+            <th>QTD.</th>
+            <th>Total</th>
+        </tr>
+        {% for linha in carrinho_servico.values %}
+        <tr>
+            <td>
+                <a href="">
+                    {{linha.nome_servico}}
+                </a>
+                <a class="ml-3" href="{% url 'os:remover' %}?id_servico={{linha.servico_id}}">
+                    <i class="fas fa-times-circle text-danger" aria-hidden="true"></i>
+                </a>
+            </td>
+            <td>{{linha.preco_servico}}</td>
+            <td>{{linha.quantidade}}</td>
+            <td></td>
+        </tr>
+        {%endfor%}
+    </table>
+
+</div>
+
+<div class="row mt-3">
+    <div class="col">
+        <p class="lead text-center"><span class="font-weight-bold">Total dos serviços:</span></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <a class="btn btn-block btn-success btn-lg" href="">
+            Finalizar ordem de serviço
+        </a>
+    </div>
+</div>
+
+{% endblock %}

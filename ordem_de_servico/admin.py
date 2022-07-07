@@ -14,7 +14,7 @@ class ItemServicoInline(admin.TabularInline):
 
 class OrdemServicoAdmin(admin.ModelAdmin):
     list_display = [
-        'cliente', 'marca_veiculo', 'modelo_veiculo', 'placa_veiculo', 'data_inicial', 'data_termino', 'os_concluida'
+        'cliente', 'veiculo', 'placa_veiculo', 'data_inicial', 'data_termino', 'os_concluida'
     ]
     inlines = [
         ItemPecaInline, ItemServicoInline
