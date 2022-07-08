@@ -24,7 +24,7 @@
         {% for produto in produtos %}
         <tbody>
             <tr>
-                <td><a href="">{{ produto.pk }}</a></td>
+                <td><a href="{% url 'produto:detalhe_produto' produto.id %}">{{ produto.pk }}</a></td>
                 <td><a href="">{{ produto.nome_produto }}</a></td>
                 <td>{{ produto.preco_produto|formata_preco }}</td>
                 <td>{{ produto.descricao_produto }}</td>

@@ -1,16 +1,17 @@
 from django.db import models
 from django.utils import timezone
+from cliente.models import Cliente
 
 
 class OrdemServico(models.Model):
-    id_cliente = models.CharField(max_length=50, default='')
-    cliente = models.CharField(max_length=50)
+    cliente = models.ForeignKey(Cliente, on_delete=models.DO_NOTHING)
     veiculo = models.CharField(max_length=50)
     placa_veiculo = models.CharField(max_length=8)
     km = models.PositiveIntegerField()
     data_inicial = models.DateField(auto_now=True, verbose_name='Data')
     data_termino = models.DateTimeField(
         default=timezone.now, verbose_name='Data Término')
+    valor_total = models.FloatField(default=0)
     observacoes = models.TextField()
     os_concluida = models.BooleanField(default=False)
 

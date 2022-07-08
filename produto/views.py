@@ -1,10 +1,12 @@
 import imp
 from this import s
 from urllib import request
-from django.shortcuts import redirect, render
+from django.shortcuts import get_list_or_404, redirect, render
 from django.views import View
 from django.views.generic.list import ListView
 from django.http import HttpResponse
+
+from ordem_de_servico import views
 from .models import Produto
 from . import forms
 from django.contrib import messages
@@ -58,3 +60,11 @@ class ListarProduto(ListView):
     template_name = 'produto/listar_produtos.html'
     context_object_name = 'produtos'
     paginate_by = 10
+
+
+def detalhe_produto(request, produto_id):
+    produto = get_list_or_404(Produto.objects.values(), id=produto_id)
+
+    return render(request, 'produto/detalhe_produto.html', {
+        'produtos': produto
+    })

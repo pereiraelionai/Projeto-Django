@@ -1,4 +1,8 @@
+from ast import Return
 import email
+from pydoc import cli
+from select import select
+from time import timezone
 from django.contrib import messages
 from servico.models import Servico
 from produto.models import Produto
@@ -10,6 +14,7 @@ from django.http import HttpResponse
 from email import message
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from datetime import date
+from .models import ItemPeca, ItemServico
 
 
 class Dashboard(ListView):
@@ -34,9 +39,11 @@ class AdicionarCliente(View):
         cpf_cliente = info_cliente.cpf
         telefone_cliente = info_cliente.telefone
         email_cliente = info_cliente.email
+        id_cliente = info_cliente.pk
 
         self.request.session['cliente'] = {}
         self.request.session['cliente'] = {
+            'id_cliente': id_cliente,
             'nome_cliente': nome_cliente,
             'last_cliente': sobrenome_cliente,
             'cpf_cliente': cpf_cliente,
@@ -45,9 +52,6 @@ class AdicionarCliente(View):
         }
 
         self.request.session.save()
-
-        print('AQUIIIIII')
-        print(self.request.session['cliente'])
 
         return redirect('os:criar')
 
@@ -135,8 +139,8 @@ class AdicionandoOS(View):
                     messages.error(
                         self.request,
                         f'Estoque insuficiente para {quantidade_produto_carrinho} x'
-                        f'no produto {nome_produto}. Adicionamos {estoque_produto} x'
-                        f'na ordem de serviço.'
+                        f' no produto {nome_produto}. Adicionamos {estoque_produto} x'
+                        f' na ordem de serviço.'
                     )
                     quantidade_produto_carrinho = estoque_produto
 
@@ -174,9 +178,6 @@ class AdicionandoOS(View):
 
         self.request.session.save()
 
-        print(carrinho_produto)
-        print(carrinho_servico)
-
         return redirect(http_referer)
 
 
@@ -187,10 +188,10 @@ class AdicionandoComent(View):
             reverse('os:criar')
         )
 
-        produto = self.request.session['carrinho_produto']
-        servico = self.request.session['carrinho_servico']
+        produto = self.request.session['carrinho_produto'] or None
+        servico = self.request.session['carrinho_servico'] or None
 
-        if produto == None or servico == None:
+        if produto == None and servico == None:
             messages.info(
                 self.request, 'Crie sua ordem de serviço'
             )
@@ -201,6 +202,7 @@ class AdicionandoComent(View):
         placa = self.request.GET.get('placa')
         km = self.request.GET.get('km')
         data = self.request.GET.get('data')
+        # TODO: arrumar formato da data
         entrada = '{}-{}-{}'.format(date.today().day,
                                     date.today().month, date.today().year)
 
@@ -214,8 +216,6 @@ class AdicionandoComent(View):
         }
 
         self.request.session.save()
-
-        print(self.request.session['carrinho_comentario'])
 
         return redirect('os:listar')
 
@@ -277,10 +277,131 @@ class RemoverItemOs(View):
 
 class ListarOs(View):
     def get(self, *args, **kwargs):
+
+        total_produto = float()
+        total_servico = float()
+
+        for chave_1, valor_1 in self.request.session['carrinho_produto'].items():
+            for chave_2, valor_2 in valor_1.items():
+                if chave_2 == 'preco_produto_os':
+                    valor_2 = float(valor_2)
+                    total_produto += valor_2
+
+        for chave_1, valor_1 in self.request.session['carrinho_servico'].items():
+            for chave_2, valor_2 in valor_1.items():
+                if chave_2 == 'preco_servico_os':
+                    valor_2 = float(valor_2)
+                    total_servico += valor_2
+
+        total_os = total_produto + total_servico
+        self.request.session['total'] = {
+            'valor_total': total_os
+        }
+
         contexto = {
             'carrinho_comentario': self.request.session.get('carrinho_comentario', {}),
             'carrinho_produto': self.request.session.get('carrinho_produto', {}),
             'carrinho_servico': self.request.session.get('carrinho_servico', {}),
-            'cliente': self.request.session.get('cliente', {})
+            'cliente': self.request.session.get('cliente', {}),
+            'total_os': self.request.session.get('total', {})
         }
         return render(self.request, 'ordem_de_servico/resumo_os.html', contexto)
+
+
+class SalvarOs(View):
+    template_name = 'ordem_de_servico/dashboard.html'
+
+    def get(self, *args, **kwargs):
+
+        if not self.request.session.get('cliente'):
+            messages.error(self.request, 'Selecione o cliente.')
+            return redirect('os:pre_os')
+
+        if not self.request.session.get('carrinho_produto') and not self.request.session.get('carrinho_servico'):
+            messages.error(self.request, 'Selecione o produto ou serviço')
+            return redirect('os:pre_os')
+
+        carrinho_produto = self.request.session['carrinho_produto']
+        carrinho_servico = self.request.session['carrinho_servico']
+        carrinho_comentario = self.request.session['carrinho_comentario']
+        cliente = self.request.session['cliente']['id_cliente']
+        valor_total = self.request.session['total']['valor_total']
+
+        carrinho_produto_itens = [v for v in carrinho_produto]
+        carrinho_servico_itens = [v for v in carrinho_servico]
+        comentario_veiculo = carrinho_comentario['veiculo']
+        comentario_placa = carrinho_comentario['placa']
+        comentario_km = carrinho_comentario['km']
+        comentario_data_entrada = carrinho_comentario['entrada']
+        comentario_data_saida = carrinho_comentario['data']
+        comentario_comentario = carrinho_comentario['comentarios']
+
+        bd_produto = list(Produto.objects.filter(id__in=carrinho_produto))
+        for valor in bd_produto:
+            vid = str(valor.id)
+
+            estoque = valor.estoque
+            qtd_carrinho = carrinho_produto[vid]['quantidade']
+            preco_unit = carrinho_produto[vid]['preco_produto']
+
+        cliente_db = Cliente.objects.get(pk=cliente)
+
+        if not self.request.session.get('carrinho_servico'):
+            fechar_os = True
+
+        os = OrdemServico(
+            cliente=cliente_db,
+            veiculo=comentario_veiculo or 'N.A',
+            placa_veiculo=comentario_placa or 'N.A',
+            km=comentario_km or 0,
+            data_inicial=comentario_data_entrada,
+            data_termino=comentario_data_saida or f'{date.today().year}-{date.today().month}-{date.today().day}',
+            valor_total=valor_total,
+            observacoes=comentario_comentario or '',
+            os_concluida=fechar_os
+        )
+
+        os.save()
+
+        ItemPeca.objects.bulk_create(
+            [
+                ItemPeca(
+                    ordem_servico=os,
+                    produto=v['nome_produto'],
+                    produto_id=v['produto_id'],
+                    preco=v['preco_produto'],
+                    quantidade=v['quantidade']
+                ) for v in carrinho_produto.values()
+            ]
+        )
+
+        ItemServico.objects.bulk_create(
+            [
+                ItemServico(
+                    ordem_servico=os,
+                    servico=v['nome_servico'],
+                    servico_id=v['servico_id'],
+                    preco=v['preco_servico']
+                ) for v in carrinho_servico.values()
+            ]
+        )
+
+        del self.request.session['carrinho_produto']
+        del self.request.session['carrinho_servico']
+        del self.request.session['cliente']
+        del self.request.session['total']
+
+        return redirect('os:dash')
+
+
+# TODO: Tentar fazer função imprimir
+class Imprimir(View):
+    pass
+
+
+class ListarOrdens(ListView):
+    # TODO: corrigir a ordem de exibição...os mais recentes primeiro
+    model = OrdemServico
+    template_name = 'ordem_de_servico/listar_os.html'
+    context_object_name = 'ordem_de_servico'
+    paginate_by = 10

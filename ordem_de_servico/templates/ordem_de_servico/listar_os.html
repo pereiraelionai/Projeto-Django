@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+<div class="row">
+    <div class="col">
+        <h3 class="mb-4"></h3>
+        <p>Abaixo todos as ordens de serviço criadas.</p>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tr>
+                    <th scope="col">O.S</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Veículo</th>
+                    <th scope="col">Placa</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Mais detalhes</th>
+                </tr>
+
+                {% for ordem in ordem_de_servico %}
+                <tr>
+                    <th scope="row">OS nº{{ordem.pk}}
+                        </td>
+                    <td>{{ordem.cliente}}</td>
+                    <td>{{ordem.veiculo}}</td>
+                    <td>{{ordem.placa_veiculo}}</td>
+                    {% if ordem.os_concluida %}
+                    <td>
+                        <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                    </td>
+                    {%else%}
+                    <td>
+                        <i class="fas fa-times-circle text-danger" aria-hidden="true"></i>
+                    </td>
+                    {% endif %}
+                    <td>
+                        <a href="">
+                            Ver <i class="fas fa-search-plus ml-2"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+            </table>
+        </div>
+    </div>
+</div>
+
+{% include 'parciais/_pagination.html' %}
+
+{% endblock %}

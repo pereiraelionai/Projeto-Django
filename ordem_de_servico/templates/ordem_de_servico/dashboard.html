@@ -18,10 +18,11 @@
             <tr>
                 <th scope="col">Nº O.S</th>
                 <th scope="col">Cliente</th>
-                <th scope="col">Marca</th>
-                <th scope="col">Modelo</th>
+                <th scope="col">Veiculo</th>
+                <th scope="col">Placa</th>
                 <th scope="col">Data Entrada</th>
                 <th scope="col">Data Final</th>
+                <th scope="col">Fechar Ordem</th>
             </tr>
         </thead>
         {% for ordem in ordens %}
@@ -30,10 +31,15 @@
             <tr>
                 <td>{{ ordem.pk }}</td>
                 <td>{{ ordem.cliente }}</td>
-                <td>{{ ordem.marca_veiculo }}</td>
-                <td>{{ ordem.modelo_veiculo }}</td>
+                <td>{{ ordem.veiculo }}</td>
+                <td>{{ ordem.placa_veiculo }}</td>
                 <td>{{ ordem.data_inicial }}</td>
                 <td>{{ ordem.data_termino }}</td>
+                <td>
+                    <a href="">
+                        Ver <i class="fas fa-search-plus ml-2"></i>
+                    </a>
+                </td>
             </tr>
         </tbody>
         {% endif %}
