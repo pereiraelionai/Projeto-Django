@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load funcoes_uteis %}
+
+{% block conteudo %}
+{% for servico in servicos %}
+<h1 class="mt-5">{{ servico.nome_servico }}</h1>
+<dl>
+    <dt>ID</dt>
+    <dd>{{ servico.id }}</dd>
+
+    <dt>Preço</dt>
+    <dd>{{ servico.preco_servico|formata_preco }}</dd>
+
+    <dt>E-mail</dt>
+    <dd>{{ servico.descricao_servico }}</dd>
+
+</dl>
+<div>
+    <a href="{% url 'servico:atualizar_servico' %}?id_servico_atualizar={{servico.id}}"
+        class="btn btn-outline-warning">Editar
+        Serviço</a>
+</div>
+{% endfor %}
+{% endblock %}

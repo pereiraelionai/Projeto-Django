@@ -18,11 +18,25 @@ class CriarCliente(View):
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
 
-        self.contexto = {
-            'clienteform': forms.ClienteForm(
-                data=self.request.POST or None
-            )
-        }
+        self.cliente = None
+        id_cliente_atualizar = self.request.GET.get('id_cliente_atualizar')
+
+        if id_cliente_atualizar:
+            self.cliente = Cliente.objects.filter(
+                id=id_cliente_atualizar).first()
+            self.contexto = {
+                'clienteform': forms.ClienteForm(
+                    data=self.request.POST or None,
+                    instance=self.cliente
+                )
+            }
+        else:
+
+            self.contexto = {
+                'clienteform': forms.ClienteForm(
+                    data=self.request.POST or None
+                )
+            }
 
         self.clienteform = self.contexto['clienteform']
 
@@ -51,10 +65,6 @@ class CriarCliente(View):
         return self.renderizar
 
 
-class Atualizar(View):
-    pass
-
-
 class ListarCliente(ListView):
     model = Cliente
     template_name = 'cliente/listar.html'
@@ -68,3 +78,14 @@ def ver_cliente(request, cliente_id):
     return render(request, 'cliente/ver_cliente.html', {
         'clientes': cliente
     })
+
+
+class Atualizar(CriarCliente):
+    template_name = 'cliente/atualizar_cliente.html'
+
+    def post(self, *args, **kwargs):
+
+        atualizar_cliente = self.clienteform.save(commit=False)
+        atualizar_cliente.save()
+
+        return redirect('cliente:listar')

@@ -1,5 +1,8 @@
 import imp
+from importlib.metadata import files
+from msilib.schema import File
 from this import s
+from tkinter.messagebox import NO
 from urllib import request
 from django.shortcuts import get_list_or_404, redirect, render
 from django.views import View
@@ -18,11 +21,26 @@ class CriarProduto(View):
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
 
-        self.contexto = {
-            'produtoform': forms.ProdutoForm(
-                data=self.request.POST or None
-            )
-        }
+        self.produto = None
+        id_produto_atualizar = self.request.GET.get('id_produto_atualizar')
+
+        # TODO: Necessário enviar resquest.FILE para salvar a foto
+        if id_produto_atualizar:
+            self.produto = Produto.objects.filter(
+                id=id_produto_atualizar).first()
+            self.contexto = {
+                'produtoform': forms.ProdutoForm(
+                    data=self.request.POST or None,
+                    instance=self.produto
+                )
+            }
+        else:
+
+            self.contexto = {
+                'produtoform': forms.ProdutoForm(
+                    data=self.request.POST or None
+                )
+            }
 
         self.produtoform = self.contexto['produtoform']
 
@@ -62,9 +80,22 @@ class ListarProduto(ListView):
     paginate_by = 10
 
 
+class Atualizar(CriarProduto):
+    template_name = 'produto/atualizar_produto.html'
+
+    def post(self, *args, **kwargs):
+
+        atualizar_produto = self.produtoform.save(commit=False)
+        atualizar_produto.save()
+
+        return redirect('produto:listar')
+
+
 def detalhe_produto(request, produto_id):
     produto = get_list_or_404(Produto.objects.values(), id=produto_id)
 
     return render(request, 'produto/detalhe_produto.html', {
         'produtos': produto
     })
+
+# TODO: Implementar deletar em todos os views.

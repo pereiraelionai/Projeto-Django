@@ -47,10 +47,11 @@
         {{ cliente.data_criacao }}
     </dd>
 </dl>
-{% endfor %}
 
 <div>
-    <a href="#" class="btn btn-outline-warning">Editar Cliente</a>
+    <a href="{% url 'cliente:atualizar_cliente' %}?id_cliente_atualizar={{ cliente.id }}"
+        class="btn btn-outline-warning">Editar
+        Cliente</a>
 </div>
-
+{% endfor %}
 {% endblock %}

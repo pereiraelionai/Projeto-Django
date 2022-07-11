@@ -1,36 +1,38 @@
 {% extends 'base.html' %}
+{% load funcoes_uteis %}
 
 {% block conteudo %}
 
 {% for produto in produtos %}
 
 <h1 class="mt-5">{{ produto.nome_produto }}</h1>
-
-{% if contato.foto %}
+{% if produto.imagem_produto %}
 <p>
-    <img src="{{ produto.imagem_produto.url }}" style="max-width: 250px; height:auto">
+    <img src="\media\{{ produto.imagem_produto }}" alt="{{produto.nome_produto}}" style="max-width: 300px; height:auto">
 </p>
 {% endif %}
 <dl>
     <dt>ID</dt>
-    <dd>{{ contato.id }}</dd>
+    <dd>{{ produto.id}}</dd>
 
-    <dt>Telefone</dt>
-    <dd>{{ contato.telefone }}</dd>
+    <dt>Preço</dt>
+    <dd>{{ produto.preco_produto|formata_preco }}</dd>
 
-    <dt>E-mail</dt>
-    <dd>{{ contato.email }}</dd>
-
-    <dt>Data criação</dt>
-    <dd>{{ contato.data_criacao|date:'d/m/Y H:i:s' }}</dd>
-
-    <dt>Categoria</dt>
-    <dd>{{ contato.categoria }}</dd>
+    <dt>Estoque</dt>
+    <dd>{{ produto.estoque }}</dd>
 
     <dt>Descrição</dt>
+    <dd>{{ produto.descricao_produto }}</dd>
+
+    <dt>Descrição Detalhada</dt>
     <dd>
-        {{ contato.descricao }}
+        <p>{{ produto.decricao_detalhada_produto }}</p>
     </dd>
 </dl>
+
+<div>
+    <a href="{% url 'produto:atualizar_produto' %}?id_produto_atualizar={{ produto.id }}"
+        class="btn btn-outline-warning">Editar Produto</a>
+</div>
 {% endfor %}
 {% endblock %}
